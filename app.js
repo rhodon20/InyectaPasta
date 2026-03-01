@@ -54,6 +54,7 @@ const DEFAULT_SETTINGS = {
   mode2NightHours: 8,
   communityCode: "MD",
   municipalityCode: "madrid",
+  animationMode: "on",
   customHolidays: "",
 };
 
@@ -88,6 +89,7 @@ const refs = {
   settingsForm: document.getElementById("settingsForm"),
   communityCodeInput: document.getElementById("communityCode"),
   municipalityCodeInput: document.getElementById("municipalityCode"),
+  animationModeInput: document.getElementById("animationMode"),
   shiftModeInput: document.getElementById("shiftMode"),
   exportBtn: document.getElementById("exportBtn"),
   importFile: document.getElementById("importFile"),
@@ -230,10 +232,14 @@ function renderCalendar() {
       cell.classList.add(`shift-${dayData.shiftType}`);
     }
 
+    const compactBadge = isCompactCalendarView();
+    const holidayText = compactBadge ? "F" : "Festivo";
+    const sundayText = compactBadge ? "D" : "Dom";
+
     cell.innerHTML = `
       <div class="day-top">
         <span class="day-number">${date.getDate()}</span>
-        ${holidayName ? `<span class="holiday-mark" title="${holidayName}">Festivo</span>` : sunday ? '<span class="sunday-mark">Dom</span>' : ""}
+        ${holidayName ? `<span class="holiday-mark" title="${holidayName}">${holidayText}</span>` : sunday ? `<span class="sunday-mark">${sundayText}</span>` : ""}
       </div>
       ${shiftLabel ? `<div class="shift-pill">${shiftLabel}</div>` : ""}
       ${noteSnippet ? `<div class="note-snippet">${escapeHtml(noteSnippet)}</div>` : ""}
@@ -440,6 +446,7 @@ async function onSaveSettings(event) {
   const settings = {
     communityCode: String(fd.get("communityCode") || "MD"),
     municipalityCode: String(fd.get("municipalityCode") || ""),
+    animationMode: String(fd.get("animationMode") || "on"),
     shiftMode: Number(fd.get("shiftMode") || 3),
     salaryBase: Number(fd.get("salaryBase") || 0),
     hourHoliday: Number(fd.get("hourHoliday") || 0),
@@ -642,7 +649,7 @@ function escapeHtml(str) {
 
 function animateCalendarCells() {
   const anime = getAnime();
-  if (!anime || prefersReducedMotion) return;
+  if (!anime || !isAnimationsEnabled()) return;
   anime({
     targets: ".day-cell",
     opacity: [0, 1],
@@ -656,7 +663,7 @@ function animateCalendarCells() {
 
 function animateTab(tabId) {
   const anime = getAnime();
-  if (!anime || prefersReducedMotion) return;
+  if (!anime || !isAnimationsEnabled()) return;
   anime({
     targets: `#${tabId}`,
     opacity: [0, 1],
@@ -668,7 +675,7 @@ function animateTab(tabId) {
 
 function animateDialogOpen() {
   const anime = getAnime();
-  if (!anime || prefersReducedMotion) return;
+  if (!anime || !isAnimationsEnabled()) return;
   anime({
     targets: "#dayForm",
     opacity: [0, 1],
@@ -681,7 +688,7 @@ function animateDialogOpen() {
 
 function animateMonthChange() {
   const anime = getAnime();
-  if (!anime || prefersReducedMotion) return;
+  if (!anime || !isAnimationsEnabled()) return;
   anime({
     targets: "#monthLabel, #monthSummary",
     opacity: [0, 1],
@@ -694,7 +701,7 @@ function animateMonthChange() {
 
 function animateDayChanged(dateISO) {
   const anime = getAnime();
-  if (!anime || prefersReducedMotion) return;
+  if (!anime || !isAnimationsEnabled()) return;
   anime({
     targets: `.day-cell[data-date="${dateISO}"]`,
     scale: [{ value: 1.04, duration: 120 }, { value: 1, duration: 180 }],
@@ -709,7 +716,7 @@ function animateDayChanged(dateISO) {
 
 function animateExchangeUpdate(dateISO) {
   const anime = getAnime();
-  if (!anime || prefersReducedMotion) return;
+  if (!anime || !isAnimationsEnabled()) return;
   anime({
     targets: `.exchange-card[data-exchange-card-date="${dateISO}"]`,
     translateX: [8, 0],
@@ -721,7 +728,7 @@ function animateExchangeUpdate(dateISO) {
 
 function animateSettingsSaved() {
   const anime = getAnime();
-  if (!anime || prefersReducedMotion) return;
+  if (!anime || !isAnimationsEnabled()) return;
   anime({
     targets: ".settings-grid .primary-btn",
     scale: [{ value: 1.05, duration: 100 }, { value: 1, duration: 160 }],
@@ -733,7 +740,7 @@ function animateSettingsSaved() {
 async function closeDialogAnimated() {
   const anime = getAnime();
   if (!refs.dialog.open) return;
-  if (!anime || prefersReducedMotion) {
+  if (!anime || !isAnimationsEnabled()) {
     refs.dialog.close();
     return;
   }
@@ -759,4 +766,15 @@ async function closeDialogAnimated() {
 
 function getAnime() {
   return globalThis.anime;
+}
+
+function isAnimationsEnabled() {
+  const mode = state.settings.animationMode || "on";
+  if (mode === "off") return false;
+  if (mode === "auto") return !prefersReducedMotion;
+  return true;
+}
+
+function isCompactCalendarView() {
+  return globalThis.matchMedia?.("(max-width: 560px)")?.matches;
 }

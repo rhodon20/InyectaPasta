@@ -228,6 +228,11 @@ body {
   padding: 2px 5px;
   border-radius: 999px;
   color: #fff;
+  white-space: nowrap;
+  line-height: 1;
+  max-width: 52px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .holiday-mark {
@@ -467,5 +472,20 @@ textarea {
 
   .app-shell {
     padding-bottom: 0;
+  }
+}
+
+@media (max-width: 560px) {
+  .holiday-mark,
+  .sunday-mark {
+    font-size: 0.6rem;
+    max-width: 24px;
+    text-align: center;
+    padding: 2px 4px;
+  }
+
+  .day-top {
+    align-items: flex-start;
+    gap: 4px;
   }
 }
