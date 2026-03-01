@@ -228,7 +228,7 @@ function renderCalendar() {
 
     const dayData = state.daysByDate.get(dateISO);
     const holidayName = getHolidayName(dateISO);
-    const shiftLabel = dayData ? getShiftLabel(dayData.shiftType) : "";
+    const shiftLabel = dayData ? getDisplayShiftLabel(dayData.shiftType) : "";
     const noteSnippet = dayData?.note ? dayData.note.slice(0, 24) : "";
     const sunday = isSunday(date);
     if (dayData?.shiftType) {
@@ -609,6 +609,23 @@ function getHolidayName(dateISO) {
 function getShiftLabel(shiftType) {
   const all = [...SHIFT_MAP[2], ...SHIFT_MAP[3]];
   return all.find((x) => x.id === shiftType)?.label || "";
+}
+
+function getDisplayShiftLabel(shiftType) {
+  if (!shiftType) return "";
+  if (!isCompactCalendarView()) return getShiftLabel(shiftType);
+
+  const compactMap = {
+    day12: "D",
+    morning: "M",
+    afternoon: "T",
+    night12: "N",
+    night: "N",
+    after: "S",
+    off: "L",
+    vacation: "V",
+  };
+  return compactMap[shiftType] || getShiftLabel(shiftType);
 }
 
 function getShiftHours(shiftType, mode) {

@@ -9,6 +9,8 @@
   --line: #dce3e7;
   --holiday: #be123c;
   --sunday: #ea580c;
+  --shift-pill-bg: #ccfbf1;
+  --shift-pill-text: #0f5132;
 }
 
 :root[data-theme="dark"] {
@@ -22,6 +24,8 @@
   --line: #2a3844;
   --holiday: #fb7185;
   --sunday: #fb923c;
+  --shift-pill-bg: #134e4a;
+  --shift-pill-text: #d6fffa;
 }
 
 * {
@@ -232,6 +236,38 @@ body {
   background: #fceef7;
 }
 
+:root[data-theme="dark"] .day-cell.shift-morning {
+  background: #1a3526;
+}
+
+:root[data-theme="dark"] .day-cell.shift-afternoon {
+  background: #3a2a1b;
+}
+
+:root[data-theme="dark"] .day-cell.shift-night {
+  background: #1c2940;
+}
+
+:root[data-theme="dark"] .day-cell.shift-day12 {
+  background: #3b3517;
+}
+
+:root[data-theme="dark"] .day-cell.shift-night12 {
+  background: #1b2940;
+}
+
+:root[data-theme="dark"] .day-cell.shift-after {
+  background: #28313a;
+}
+
+:root[data-theme="dark"] .day-cell.shift-off {
+  background: #1a3340;
+}
+
+:root[data-theme="dark"] .day-cell.shift-vacation {
+  background: #3a2035;
+}
+
 .day-top {
   display: flex;
   justify-content: space-between;
@@ -268,9 +304,10 @@ body {
   font-size: 0.75rem;
   border-radius: 8px;
   padding: 3px 6px;
-  background: var(--brand-soft);
-  color: #0f5132;
+  background: var(--shift-pill-bg);
+  color: var(--shift-pill-text);
   width: fit-content;
+  font-weight: 600;
 }
 
 .note-snippet {
@@ -545,5 +582,12 @@ textarea {
   .day-top {
     align-items: flex-start;
     gap: 4px;
+  }
+
+  .shift-pill {
+    min-width: 20px;
+    text-align: center;
+    padding: 2px 6px;
+    font-size: 0.68rem;
   }
 }
