@@ -393,6 +393,14 @@ textarea {
   gap: 6px;
 }
 
+.credit {
+  text-align: center;
+  color: #7a8a93;
+  font-size: 0.76rem;
+  letter-spacing: 0.02em;
+  padding: 8px 12px 4px;
+}
+
 .tab-btn.active {
   background: var(--brand-soft);
   border-color: #99f6e4;
