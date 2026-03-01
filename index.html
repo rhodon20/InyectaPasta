@@ -1,0 +1,186 @@
+﻿<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0f766e">
+  <title>Calendario Nómina Enfermería</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <button id="prevMonthBtn" class="icon-btn" aria-label="Mes anterior">◀</button>
+      <div class="month-box">
+        <h1 id="monthLabel">Mes</h1>
+        <button id="todayBtn" class="link-btn">Hoy</button>
+      </div>
+      <button id="nextMonthBtn" class="icon-btn" aria-label="Mes siguiente">▶</button>
+    </header>
+
+    <main>
+      <section id="calendarTab" class="tab-content active" aria-label="Calendario">
+        <div id="monthSummary" class="summary"></div>
+        <div class="weekdays" id="weekdays"></div>
+        <div class="calendar-grid" id="calendarGrid"></div>
+        <div id="payrollSummary" class="payroll-card"></div>
+      </section>
+
+      <section id="exchangesTab" class="tab-content" aria-label="Intercambios">
+        <div class="section-head">
+          <h2>Intercambios</h2>
+          <p>Control centralizado de cambios de turno.</p>
+        </div>
+        <div id="exchangesList" class="card-list"></div>
+      </section>
+
+      <section id="settingsTab" class="tab-content" aria-label="Configuración">
+        <div class="section-head">
+          <h2>Configuración</h2>
+          <p>Preferencias, salario base y persistencia de datos.</p>
+        </div>
+
+        <form id="settingsForm" class="settings-grid">
+          <label>
+            Comunidad autonoma
+            <select id="communityCode" name="communityCode"></select>
+          </label>
+
+          <label>
+            Municipio
+            <select id="municipalityCode" name="municipalityCode"></select>
+          </label>
+
+          <label>
+            Modo de turnos
+            <select id="shiftMode" name="shiftMode">
+              <option value="3">Modo 3 turnos</option>
+              <option value="2">Modo 2 turnos</option>
+            </select>
+          </label>
+
+          <label>
+            Salario base mensual
+            <input type="number" step="0.01" min="0" name="salaryBase" placeholder="0.00">
+          </label>
+
+          <label>
+            Precio hora festivo
+            <input type="number" step="0.01" min="0" name="hourHoliday" placeholder="0.00">
+          </label>
+
+          <label>
+            Precio hora nocturna en festivo
+            <input type="number" step="0.01" min="0" name="hourHolidayNight" placeholder="0.00">
+          </label>
+
+          <label>
+            Precio hora domingo
+            <input type="number" step="0.01" min="0" name="hourSunday" placeholder="0.00">
+          </label>
+
+          <label>
+            Precio hora nocturna en domingo
+            <input type="number" step="0.01" min="0" name="hourSundayNight" placeholder="0.00">
+          </label>
+
+          <label>
+            Precio hora diurna normal
+            <input type="number" step="0.01" min="0" name="hourNormalDay" placeholder="0.00">
+          </label>
+
+          <label>
+            Precio hora nocturna normal
+            <input type="number" step="0.01" min="0" name="hourNormalNight" placeholder="0.00">
+          </label>
+
+          <label>
+            Horas nocturnas en turno nocturno (modo 2)
+            <input type="number" step="0.25" min="0" max="12" name="mode2NightHours" placeholder="8">
+          </label>
+
+          <label class="full-width">
+            Festivos personalizados (YYYY-MM-DD, separados por coma)
+            <textarea name="customHolidays" rows="2" placeholder="2026-06-24,2026-09-08"></textarea>
+          </label>
+
+          <div class="actions full-width">
+            <button type="submit" class="primary-btn">Guardar configuración</button>
+          </div>
+        </form>
+
+        <div class="section-head mini">
+          <h3>Datos</h3>
+        </div>
+        <div class="actions">
+          <button id="exportBtn" class="ghost-btn" type="button">Exportar JSON</button>
+          <label class="file-label" for="importFile">Importar JSON</label>
+          <input id="importFile" type="file" accept="application/json">
+          <button id="clearBtn" class="danger-btn" type="button">Borrar todo</button>
+          <a class="ghost-btn smoke-link" href="smoke.html" target="_blank" rel="noopener">Abrir Smoke</a>
+        </div>
+      </section>
+    </main>
+
+    <nav class="tabbar" aria-label="Navegación principal">
+      <button class="tab-btn active" data-tab="calendarTab">Calendario</button>
+      <button class="tab-btn" data-tab="exchangesTab">Intercambios</button>
+      <button class="tab-btn" data-tab="settingsTab">Configuración</button>
+    </nav>
+  </div>
+
+  <dialog id="dayDialog" class="day-dialog">
+    <form id="dayForm" method="dialog">
+      <header>
+        <h3 id="dialogDateLabel">Día</h3>
+        <p id="dialogHolidayLabel"></p>
+      </header>
+
+      <label>
+        Turno
+        <select id="dayShift" name="shiftType"></select>
+      </label>
+
+      <label>
+        Anotación
+        <textarea id="dayNote" name="note" rows="3" placeholder="Ej: Se lo hago a Pepa Pérez"></textarea>
+      </label>
+
+      <label class="checkbox-line">
+        <input type="checkbox" id="exchangeEnabled" name="exchangeEnabled">
+        Registrar como intercambio
+      </label>
+
+      <div id="exchangeFields">
+        <label>
+          Compañero/a
+          <input type="text" id="exchangePeer" name="exchangePeer" placeholder="Nombre y apellidos">
+        </label>
+
+        <label>
+          Detalle del intercambio
+          <textarea id="exchangeNote" name="exchangeNote" rows="2" placeholder="Qué turno haces y cuál te deben"></textarea>
+        </label>
+
+        <label>
+          Estado
+          <select id="exchangeStatus" name="exchangeStatus">
+            <option value="pendiente">Pendiente</option>
+            <option value="devuelto">Devuelto</option>
+          </select>
+        </label>
+      </div>
+
+      <footer>
+        <button type="button" id="deleteDayBtn" class="danger-btn">Borrar día</button>
+        <div class="grow"></div>
+        <button type="button" id="cancelDialogBtn" class="ghost-btn">Cancelar</button>
+        <button type="submit" class="primary-btn">Guardar</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.2/lib/anime.min.js" defer></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

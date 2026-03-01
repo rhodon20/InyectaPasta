@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smoke Test - Calendario Nómina</title>
+  <style>
+    body { font-family: "Segoe UI", Tahoma, sans-serif; margin: 16px; background: #f8fafc; color: #0f172a; }
+    .ok { color: #166534; }
+    .ko { color: #b91c1c; }
+    .card { background: #fff; border: 1px solid #dbe4ea; border-radius: 10px; padding: 12px; margin-bottom: 10px; }
+    code { background: #e2e8f0; padding: 2px 5px; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <h1>Smoke Test</h1>
+  <p>Ejecuta pruebas rápidas de regresión en navegador.</p>
+  <div id="summary" class="card"></div>
+  <div id="results"></div>
+
+  <script type="module" src="./smoke.js"></script>
+</body>
+</html>
