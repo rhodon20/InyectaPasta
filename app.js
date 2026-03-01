@@ -55,6 +55,7 @@ const DEFAULT_SETTINGS = {
   communityCode: "MD",
   municipalityCode: "madrid",
   animationMode: "on",
+  themeMode: "light",
   customHolidays: "",
 };
 
@@ -90,6 +91,7 @@ const refs = {
   communityCodeInput: document.getElementById("communityCode"),
   municipalityCodeInput: document.getElementById("municipalityCode"),
   animationModeInput: document.getElementById("animationMode"),
+  themeModeInput: document.getElementById("themeMode"),
   shiftModeInput: document.getElementById("shiftMode"),
   exportBtn: document.getElementById("exportBtn"),
   importFile: document.getElementById("importFile"),
@@ -126,6 +128,7 @@ async function hydrate() {
   ]);
 
   state.settings = { ...DEFAULT_SETTINGS, ...(settingsSaved || {}) };
+  applyThemeMode(state.settings.themeMode);
   state.customHolidaySet = parseCustomHolidayList(state.settings.customHolidays);
   state.daysByDate = new Map(dayRows.map((x) => [x.date, x]));
   state.exchangesByDate = new Map(exchangeRows.map((x) => [x.date, x]));
@@ -447,6 +450,7 @@ async function onSaveSettings(event) {
     communityCode: String(fd.get("communityCode") || "MD"),
     municipalityCode: String(fd.get("municipalityCode") || ""),
     animationMode: String(fd.get("animationMode") || "on"),
+    themeMode: String(fd.get("themeMode") || "light"),
     shiftMode: Number(fd.get("shiftMode") || 3),
     salaryBase: Number(fd.get("salaryBase") || 0),
     hourHoliday: Number(fd.get("hourHoliday") || 0),
@@ -465,6 +469,7 @@ async function onSaveSettings(event) {
   state.communityHolidayCache.clear();
   state.municipalityHolidayCache.clear();
   await setSettings(state.settings);
+  applyThemeMode(state.settings.themeMode);
   renderAll();
   animateSettingsSaved();
   alert("Configuracion guardada.");
@@ -554,6 +559,7 @@ async function onClearAll() {
   state.daysByDate.clear();
   state.exchangesByDate.clear();
   state.settings = { ...DEFAULT_SETTINGS };
+  applyThemeMode(state.settings.themeMode);
   state.customHolidaySet = new Set();
   populateCommunitySelect();
   populateMunicipalitySelect(state.settings.communityCode, state.settings.municipalityCode);
@@ -777,4 +783,9 @@ function isAnimationsEnabled() {
 
 function isCompactCalendarView() {
   return globalThis.matchMedia?.("(max-width: 560px)")?.matches;
+}
+
+function applyThemeMode(themeMode) {
+  const safeTheme = themeMode === "dark" ? "dark" : "light";
+  document.documentElement.setAttribute("data-theme", safeTheme);
 }

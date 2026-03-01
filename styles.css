@@ -11,6 +11,19 @@
   --sunday: #ea580c;
 }
 
+:root[data-theme="dark"] {
+  --bg: #0f1720;
+  --surface: #18222c;
+  --text: #e2e8f0;
+  --muted: #9fb0bf;
+  --brand: #14b8a6;
+  --brand-soft: #163a37;
+  --danger: #f87171;
+  --line: #2a3844;
+  --holiday: #fb7185;
+  --sunday: #fb923c;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -20,6 +33,10 @@ body {
   font-family: "Segoe UI", Tahoma, sans-serif;
   background: radial-gradient(circle at top right, #d1fae5, #f4f7f8 45%);
   color: var(--text);
+}
+
+:root[data-theme="dark"] body {
+  background: radial-gradient(circle at top right, #13333a, #0f1720 45%);
 }
 
 .app-shell {
@@ -42,6 +59,10 @@ body {
   background: rgba(244, 247, 248, 0.9);
   border-bottom: 1px solid var(--line);
   z-index: 5;
+}
+
+:root[data-theme="dark"] .topbar {
+  background: rgba(15, 23, 32, 0.9);
 }
 
 .month-box {
@@ -358,6 +379,10 @@ textarea {
   background: #f8fafc;
 }
 
+:root[data-theme="dark"] .ghost-btn {
+  background: #1a2630;
+}
+
 .danger-btn {
   border-color: var(--danger);
   color: var(--danger);
@@ -394,12 +419,36 @@ textarea {
   min-height: 62px;
 }
 
+:root[data-theme="dark"] .tabbar {
+  background: rgba(15, 23, 32, 0.95);
+}
+
 .credit {
   text-align: center;
   color: #7a8a93;
   font-size: 0.76rem;
   letter-spacing: 0.02em;
   padding: 8px 12px 4px;
+}
+
+:root[data-theme="dark"] .payroll-card {
+  background: #17232d;
+}
+
+:root[data-theme="dark"] .payroll-row {
+  background: #1b2a35;
+}
+
+:root[data-theme="dark"] input,
+:root[data-theme="dark"] select,
+:root[data-theme="dark"] textarea {
+  background: #12202a;
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .mini-btn.active {
+  border-color: #2dd4bf;
+  background: #134e4a;
 }
 
 .tab-btn.active {
